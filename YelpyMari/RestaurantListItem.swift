@@ -1,5 +1,5 @@
 //
-//  Restaurant.swift
+//  RestaurantListItem.swift
 //  YelpyMari
 //
 //  Created by Mari Batilando on 1/12/22.
@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Restaurant {
+struct RestaurantListItem {
+  let id: String
   let name: String
   let type: String
   let rating: Int

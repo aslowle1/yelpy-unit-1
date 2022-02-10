@@ -9,7 +9,7 @@ import UIKit
 
 class RestaurantsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
   @IBOutlet weak var tableView: UITableView!
-  private var restaurants = [Restaurant]() {
+  private var restaurants = [RestaurantListItem]() {
     didSet {
       tableView.reloadData()
     }
@@ -32,17 +32,26 @@ class RestaurantsViewController: UIViewController, UITableViewDelegate, UITableV
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 100.0
   }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: RestaurantTableViewCell.cellIdentifier) as? RestaurantTableViewCell else {
-      return UITableViewCell()
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
-    cell.configure(with: restaurants[indexPath.row])
-    return cell
-  }
-  
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-  }
-}
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RestaurantTableViewCell.cellIdentifier) as? RestaurantTableViewCell else {
+            return UITableViewCell()
+        }
+        cell.configure(with: restaurants[indexPath.row])
+        return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "toRestaurantDetail",
+              let viewController = segue.destination as? RestaurantDetailViewController,
+              let indexPath = tableView.indexPathForSelectedRow else {
+                  return
+              }
+        let selectedRestaurant = restaurants[indexPath.row]
+        viewController.configure(with: selectedRestaurant.id)
+    }
+}
